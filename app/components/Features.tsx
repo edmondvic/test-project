@@ -8,7 +8,7 @@ export default function Features() {
     {
       icon: <FaBolt size={35} className="text-blue-600" />,
       title: "Ultra-Fast Sharing",
-      text: "Send videos, music, documents, and large files within seconds with optimized compression.",
+      text: "Send and receive videos, music, documents, and large files online & offline within seconds with optimized compression.",
     },
     {
       icon: <FaWifi size={35} className="text-blue-600" />,
@@ -26,14 +26,14 @@ export default function Features() {
       text: "Backup, store, and access your files anytime using StreamSwift Cloud.",
     },
     {
-      icon: <FaQrcode size={35} className="text-blue-600" />,
+      icon: <FaLanguage size={35} className="text-blue-600" />,
       title: "QR & Unique Code Connect",
-      text: "Connect instantly using your unique StreamSwift ID or QR Code — anywhere.",
+      text: "AI-powered multilingual translation for media and documents.",
     },
     {
       icon: <FaMobileAlt size={35} className="text-blue-600" />,
       title: "Cross-Platform",
-      text: "Available on Android, iOS, Windows, Mac, and Web.",
+      text: "Available on Android, iOS, Windows, and Mac.",
     },
   ];
 
