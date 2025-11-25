@@ -27,8 +27,8 @@ export default function Features() {
     },
     {
       icon: <FaLanguage size={35} className="text-blue-600" />,
-      title: "QR & Unique Code Connect",
-      text: "AI-powered multilingual translation for media and documents.",
+      title: "AI Media & File Translation",
+      text: "Translate any media or document instantly into multiple languages with AI-powered accuracy.",
     },
     {
       icon: <FaMobileAlt size={35} className="text-blue-600" />,
