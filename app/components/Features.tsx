@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaBolt, FaWifi, FaLock, FaCloudUploadAlt, FaQrcode, FaMobileAlt } from "react-icons/fa";
+import { FaBolt, FaWifi, FaLock, FaCloudUploadAlt, FaLanguage, FaMobileAlt } from "react-icons/fa";
 
 export default function Features() {
   const features = [
