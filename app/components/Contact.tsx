@@ -34,7 +34,7 @@ export default function Contact() {
 
         <p className="mt-8 text-gray-500">
           Or email us directly at{" "}
-          <a href="mailto:info@streamswift.app" className="text-blue-600 hover:underline">
+          <a href="mailto:support@streamswift.app" className="text-blue-600 hover:underline">
             info@streamswift.app
           </a>
         </p>
