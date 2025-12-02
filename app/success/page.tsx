@@ -94,23 +94,29 @@ export default async function SuccessPage({
   const session = await stripe.checkout.sessions.retrieve(sessionId);
 
   const customerName = session.customer_details?.name || "";
-  const plan =
-    (session.metadata?.planName as string) ||
-    session.display_items?.[0]?.custom?.name ||
-    "Premium";
 
-  const nextBilling =
-    session.subscription &&
-    (
-      await stripe.subscriptions.retrieve(
-        session.subscription as string
-      )
-    ).current_period_end;
+  // Get plan name safely
+  let plan = (session.metadata?.planName as string) || "Premium";
+
+  // If metadata is not set, fetch line items
+  if (!session.metadata?.planName) {
+    const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+      limit: 1,
+    });
+    plan = lineItems.data[0]?.description || plan;
+  }
+
+  // Get next billing date if subscription exists
+  let nextBilling: number | null = null;
+  if (session.subscription) {
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    );
+    nextBilling = subscription.current_period_end;
+  }
 
   const lang = getLang(new URLSearchParams(searchParams));
-
   const t = messages[lang] || messages.en;
-
   const isRTL = lang === "ar";
 
   return (
@@ -126,21 +132,16 @@ export default async function SuccessPage({
           {t.title}
         </h1>
 
-        <p className="text-gray-700 mb-6 text-lg">
-          {t.message}
-        </p>
+        <p className="text-gray-700 mb-6 text-lg">{t.message}</p>
 
         <div className="bg-gray-100 p-6 rounded-xl mb-6">
           <p className="text-gray-700 mb-3">
-            <span className="font-semibold">{t.planLabel}</span>{" "}
-            {plan}
+            <span className="font-semibold">{t.planLabel}</span> {plan}
           </p>
 
           {nextBilling && (
             <p className="text-gray-700">
-              <span className="font-semibold">
-                {t.billing}
-              </span>{" "}
+              <span className="font-semibold">{t.billing}</span>{" "}
               {new Date(nextBilling * 1000).toLocaleDateString()}
             </p>
           )}
