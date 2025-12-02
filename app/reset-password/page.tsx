@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAuth, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
-import { app } from "@/lib/firebaseClient";
+import { app } from "@/lib/firebase";
 import { sendResetEmail } from "@/lib/sendResetEmail";
 
 type Language = "EN" | "DE" | "ES" | "FR" | "AR" | "HI" | "ZH" | "PT";
