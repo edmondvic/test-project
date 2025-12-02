@@ -11,7 +11,10 @@ export const auth = getAuth(app);
 
 // Send reset link
 export async function sendReset(email: string) {
-  return await sendPasswordResetEmail(auth, email);
+  return await sendPasswordResetEmail(auth, email, {
+    url: "https://streamswift.app/reset-password",
+    handleCodeInApp: true,
+  });
 }
 
 // Verify code from email link

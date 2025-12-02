@@ -1,17 +1,19 @@
-import { getAuth } from "firebase/auth";
-import { app } from "@/lib/firebaseClient";
+// web/lib/sendResetEmail.ts
+import { sendPasswordResetEmail, getAuth } from "firebase/auth";
+import { app } from "@/lib/firebase";
 
 export async function sendResetEmail(email: string, lang: string) {
   const auth = getAuth(app);
 
   try {
-    await auth.sendPasswordResetEmail(email, {
-      url: "https://streamswift.app/reset-password", // your reset page
+    await sendPasswordResetEmail(auth, email, {
+      url: `https://streamswift.app/reset-password?lang=${lang}`,
       handleCodeInApp: true,
-      locale: lang, // 'en', 'fr', 'es', 'de', etc.
     });
+
     console.log("Password reset email sent!");
   } catch (err) {
     console.error("Error sending reset email:", err);
+    throw err;
   }
 }
