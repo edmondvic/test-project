@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState } from "react";
 import { getAuth, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
 import { app } from "@/lib/firebase";
@@ -131,7 +133,7 @@ const translations: Record<Language, Record<string, string>> = {
 };
 
 export default function ResetPasswordPage() {
-  const auth = getAuth(app);
+  const [auth, setAuth] = useState<any>(null);
   const [lang, setLang] = useState<Language>("EN");
 
   const [email, setEmail] = useState("");
@@ -144,8 +146,16 @@ export default function ResetPasswordPage() {
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Detect user browser language and set translation
+  // ✅ SAFE: Firebase only initializes in browser
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAuth(getAuth(app));
+    }
+  }, []);
+
+  // ✅ Detect user language (browser only)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
     const browserLang = navigator.language.split("-")[0].toUpperCase();
     if (["EN","DE","ES","FR","AR","HI","ZH","PT"].includes(browserLang)) {
       setLang(browserLang as Language);
@@ -154,10 +164,13 @@ export default function ResetPasswordPage() {
     }
   }, []);
 
-  // Read oobCode from URL for reset password
+  // ✅ Read oobCode safely in browser
   useEffect(() => {
+    if (!auth || typeof window === "undefined") return;
+
     const url = new URL(window.location.href);
     const code = url.searchParams.get("oobCode");
+
     if (code) {
       setOobCode(code);
       setLoading(true);
@@ -182,15 +195,18 @@ export default function ResetPasswordPage() {
   };
 
   const handleResetPassword = async () => {
-    if (!oobCode) return;
+    if (!auth || !oobCode) return;
+
     if (newPassword !== confirmPass) {
       setErrorMsg(translations[lang].passwordMismatch);
       return;
     }
+
     if (newPassword.length < 6) {
       setErrorMsg(translations[lang].passwordShort);
       return;
     }
+
     setLoading(true);
     try {
       await confirmPasswordReset(auth, oobCode, newPassword);
@@ -204,11 +220,12 @@ export default function ResetPasswordPage() {
     }
   };
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      Loading...
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
 
   if (emailSent)
     return (
